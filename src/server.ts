@@ -1,12 +1,16 @@
 import app from './app'
-import config from './app/config'
 import mongoose from 'mongoose'
+const MONGO_URI =
+  'mongodb+srv://mongoos:mongos123@cluster0.mafpasm.mongodb.net/practice-project?retryWrites=true&w=majority'
+
+const port = process.env.PORT || 5000
+
 async function main() {
   try {
-    await mongoose.connect(config.MONGO_URI as string)
+    await mongoose.connect(MONGO_URI as string)
 
-    app.listen(config.port, () => {
-      console.log(`Example app listening on port ${config.port}`)
+    app.listen(port, () => {
+      console.log(`Example app listening on port here ${port}`)
     })
   } catch (error) {
     console.log(error)
