@@ -1,7 +1,7 @@
 export type User= {
   id: string
   password: string
-  needsPasswordChange: boolean
+  needsPasswordChange?: boolean
   role: 'admin' | 'student' | 'faculty'
   isDeleted: boolean
   status: 'in-progress'|'blocked'
