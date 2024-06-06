@@ -1,16 +1,15 @@
 import app from './app'
 import mongoose from 'mongoose'
 import config from './app/config'
-// const MONGO_URI =
-//   'mongodb+srv://mongoos:mongos123@cluster0.mafpasm.mongodb.net/practice-project?retryWrites=true&w=majority'
+import {Server} from 'http'
 
-// const port = process.env.PORT || 5000
+let server:Server;
 
 async function main() {
   try {
     await mongoose.connect(config.database_url as string)
-
-    app.listen(config.port, () => {
+   console.log('db-connected')
+   server=app.listen(config.port, () => {
       console.log(`Example app listening on port here ${config.port}`)
     })
   } catch (error) {
@@ -18,3 +17,18 @@ async function main() {
   }
 }
 main()
+
+process.on('unhandledRejection', () => {
+  console.log('unhandledRejection is detected');
+  if (server) {
+    server.close(() => {
+      process.exit(1)
+    })
+  }
+  process.exit(1)
+})
+
+process.on('uncaughtException', () => { 
+   console.log('uncaughtException is detected')
+  process.exit(1)
+})
