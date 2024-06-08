@@ -1,22 +1,42 @@
-import config from "../../config"
-import { NewUser, TUser } from "./user.interface"
-import { userModel } from "./user.model"
 
-const createStudentIntoDB = async (password:string,studentData: TUser) => {
+import config from "../../config"
+import { TAcademicSemester } from "../academicSemester/academicSemester.interface"
+import { academicSemesterModel } from "../academicSemester/academicSemester.model"
+import { TStudent } from "../students/student.interface"
+import { Student } from "../students/student.model"
+import { TUser } from "./user.interface"
+import { userModel } from "./user.model"
+import { generateStudentId } from "./user.utils"
+
+const createStudentIntoDB = async (password:string,studentData:TStudent) => {
   // if (await Student.isUserExists(studentData.id)) {
   //   throw new Error('User already exists!')
   // }
-  const user:NewUser={
-    password: "",
-    role: ""
+  const userData:Partial<TUser>={
   }
 
-  user.password=password || config.defaultPassword as string
+
+
+  const AcademicSemester=await academicSemesterModel.findById(studentData.admissionSemester)
+
+
+  userData.password=password || config.defaultPassword as string 
   // set student role
-  user.role = 'student'
+  userData.role ='student'
+  userData.id=await generateStudentId(AcademicSemester as TAcademicSemester) 
   // create  a user
-  const result = await userModel.create(studentData)
-  return result
+  const newUser = await userModel.create(userData)
+
+  // create a student
+  if (Object.keys(newUser).length) {
+    studentData.id = newUser.id;
+    studentData.user = newUser._id;
+    
+    const newStudent = await Student.create(studentData)
+    return newStudent
+  }
+
+
 }
 
 

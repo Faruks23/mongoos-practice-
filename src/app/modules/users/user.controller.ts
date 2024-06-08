@@ -1,30 +1,24 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Request, Response } from "express";
 import { userService } from "./user.service"
+import sendResponse from "../../utils/sendResponse";
+import { catchAsync } from "../../utils/catchAsync";
 
 
-const createStudent = async (req: Request, res: Response) => {
-  try {
-    const { password,student } = req.body;
-    // console.log(studentData)
-    // const zodParsedData = studentValidationSchema.parse(studentData)
+const createStudent = catchAsync(async (req,res, next) => {
 
-    const result = await userService.createStudentIntoDB(password,student)
+      const { password, student } = req.body
+      const result = await userService.createStudentIntoDB(password, student)
+      sendResponse(res, {
+        data: result,
+        message: 'user created successfully',
+      })
+   
+  },
+)
 
-    res.status(200).json({
-      success: true,
-      message: 'Student is created succesfully',
-      data: result,
-    })
-  } catch (err: any) {
-    res.status(500).json({
-      success: false,
-      message: err.message || 'something went wrong',
-      error: err,
-    })
-  }
-}
+
 
 
 export const userController = {

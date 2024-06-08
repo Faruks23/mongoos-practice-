@@ -4,6 +4,10 @@ import express, { Application, NextFunction, Request, Response } from 'express'
 const app: Application = express()
 import cors from 'cors'
 import { StudentRoutes } from './app/modules/students/student.route'
+import { userRouter } from './app/modules/users/user.route'
+import globalErrorhandler from './app/middleware/globalErrorHandeler'
+import notFound from './app/middleware/notFound'
+import router from './app/router'
 
 
 app.use(express.json())
@@ -17,7 +21,11 @@ app.get('/',async  (req: Request, res: Response) => {
 })
 
 // application routes
-app.use('/api/v1/students', StudentRoutes);
+app.use('/api/v1', router);
+
+
+app.use(globalErrorhandler)
+app.use(notFound)
 
 
 

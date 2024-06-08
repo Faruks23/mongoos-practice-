@@ -1,6 +1,6 @@
 export type TUser = {
-  id:'string',
-  password: 'string',
+  id:string,
+  password: string,
   needPasswordChange: boolean,
   role: 'admin' | 'faculty' | 'student',
   status: 'in-progress'|'blocked',
@@ -9,5 +9,6 @@ export type TUser = {
 }
 export type NewUser = {
   password: string,
-  role:string,
+  role: string,
+  id:string
  }
