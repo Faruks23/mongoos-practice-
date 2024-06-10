@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Schema, model } from "mongoose";
 import { TAcademicSemester } from "./academicSemester.interface";
+import AppError from "../../error/AppError";
+import httpStatus from "http-status";
 
 
 
@@ -46,7 +48,8 @@ AcademicSchema.pre('save', async function (next) {
     year:this.year,
   })
   if (isSemesterExist) { 
-    throw new Error (`Semester ${this.name} already exists'`);
+    throw new AppError(httpStatus.OK, `${this.name} already exists`)
+   
   }
   next()
 })

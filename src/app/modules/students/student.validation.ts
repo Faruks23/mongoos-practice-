@@ -44,11 +44,43 @@ export const studentValidationSchema = z.object({
       guardian: guardianSchema,
       localGuardian: localGuardianSchema,
       profileImg: z.string(),
-      admissionSemester:z.string()
+      admissionSemester: z.string(),
+      academicDepartment: z.string()
+      
     }),
   }),
 })
 
+
+
+export const studentUpdateValidationSchema = z.object({
+  body: z
+    .object({
+      password: z.string().max(20).optional(),
+      student: z
+        .object({
+          name: userNameSchema.partial(),
+          gender: z.enum(['male', 'female', 'other']).optional(),
+          dateOfBirth: z.string().optional(),
+          email: z.string().email().optional(),
+          contactNo: z.string().optional(),
+          emergencyContact: z.string().optional(),
+          bloodGroups: z
+            .enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])
+            .optional(),
+          presentAddress: z.string().optional(),
+          permanentAddress: z.string().optional(),
+          guardian: guardianSchema.partial(),
+          localGuardian: localGuardianSchema.partial(),
+          profileImg: z.string().optional(),
+          admissionSemester: z.string().optional(),
+          academicDepartment: z.string().optional(),
+        })
+        .partial(),
+    })
+    .partial(),
+})
 export const studentValidations= {
-  studentValidationSchema
+  studentValidationSchema,
+  studentUpdateValidationSchema
 }

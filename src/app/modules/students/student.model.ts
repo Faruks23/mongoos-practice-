@@ -1,5 +1,7 @@
 import { Schema, model } from "mongoose";
 import { StudentModel, TGuardian, TLocalGuardian, TStudent, TUserName } from "./student.interface";
+import AppError from "../../error/AppError";
+import httpStatus from "http-status";
 
 
 const userNameSchema = new Schema<TUserName>({
@@ -141,6 +143,10 @@ const studentSchema = new Schema<TStudent>(
       type: Schema.Types.ObjectId,
       ref: 'AcademicSemester',
     },
+    academicDepartment: {
+      type: Schema.Types.ObjectId,
+      ref: 'AcademicDepartment',
+    },
 
     isDeleted: {
       type: Boolean,
@@ -164,6 +170,20 @@ studentSchema.virtual('fullName').get(function () {
 // Query Middleware
 studentSchema.pre('find', function (next) {
   this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
+// Query Middleware
+studentSchema.pre('deleteOne', async function (next) {
+  const query = this.getQuery();
+  console.log(query)
+  
+  const isUserExists= await this.findById(query);
+  // next();
+  // console.log(isUserExists)
+  if (!isUserExists) {
+    throw new AppError(httpStatus.NOT_FOUND,'user dose not exist')
+  }
   next();
 });
 

@@ -4,6 +4,7 @@ import { academicSemester } from './academicValidation'
 import { academicSemesterController } from './academicSemester.controller'
 
 
+
 const router = express.Router()
 
 router.post('/create-academic-semester',validateRequest(academicSemester.AcademicSchemaValidation),academicSemesterController.CreateAcademicSemester)
@@ -11,6 +12,10 @@ router.post('/create-academic-semester',validateRequest(academicSemester.Academi
 router.get('/get-academic-semester',academicSemesterController.getAcademicSemester)
 router.get('/get-single-academic-semester/:id',academicSemesterController.getSingleAcademicSemester)
 
-
+router.patch(
+  '/:semesterId',
+  validateRequest(academicSemester.updateAcademicSemesterValidation),
+  academicSemesterController.updateAcademicSemester,
+)
 
 export const AcademicSemesterRoute = router
